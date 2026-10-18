@@ -45,7 +45,8 @@ export default function MapView({visible, selected, onSelect}) {
       marker.map = ids.has(id) ? map.current : null;
       pin.classList.toggle('selected', id === selected);
       marker.zIndex = id === selected ? 100 : 1;
-      if (id === selected && ids.has(id)) map.current.panTo(marker.position);
+      // Only pan when the marker is off screen, so the other markers stay in view.
+      if (id === selected && ids.has(id) && !map.current.getBounds()?.contains(marker.position)) map.current.panTo(marker.position);
     });
   }, [visible, selected, ready]);
   return <section className="map-panel" aria-label="Interactive neighborhood map">
